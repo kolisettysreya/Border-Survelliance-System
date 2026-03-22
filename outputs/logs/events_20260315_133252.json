@@ -1,0 +1,18 @@
+[
+  {
+    "frame": 33,
+    "track_id": 20,
+    "class": "vehicle",
+    "line": "EAST GATE",
+    "direction": "BtoA",
+    "timestamp": "2026-03-15T13:33:01.863552"
+  },
+  {
+    "frame": 49,
+    "track_id": 1,
+    "class": "vehicle",
+    "line": "EAST GATE",
+    "direction": "BtoA",
+    "timestamp": "2026-03-15T13:33:06.200886"
+  }
+]

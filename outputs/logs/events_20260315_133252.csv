@@ -1,0 +1,3 @@
+timestamp,frame,track_id,class,line,direction
+2026-03-15T13:33:01.863552,33,20,vehicle,EAST GATE,BtoA
+2026-03-15T13:33:06.200886,49,1,vehicle,EAST GATE,BtoA

@@ -1,0 +1,90 @@
+[
+  {
+    "frame": 12,
+    "track_id": 18,
+    "class": "vehicle",
+    "line": "EAST GATE",
+    "direction": "BtoA",
+    "timestamp": "2026-03-14T14:42:32.046702"
+  },
+  {
+    "frame": 125,
+    "track_id": 26,
+    "class": "vehicle",
+    "line": "EAST GATE",
+    "direction": "BtoA",
+    "timestamp": "2026-03-14T14:43:05.357900"
+  },
+  {
+    "frame": 430,
+    "track_id": 136,
+    "class": "vehicle",
+    "line": "EAST GATE",
+    "direction": "AtoB",
+    "timestamp": "2026-03-14T14:44:40.072746"
+  },
+  {
+    "frame": 470,
+    "track_id": 122,
+    "class": "vehicle",
+    "line": "EAST GATE",
+    "direction": "AtoB",
+    "timestamp": "2026-03-14T14:44:54.798485"
+  },
+  {
+    "frame": 547,
+    "track_id": 165,
+    "class": "vehicle",
+    "line": "EAST GATE",
+    "direction": "AtoB",
+    "timestamp": "2026-03-14T14:45:18.276964"
+  },
+  {
+    "frame": 604,
+    "track_id": 160,
+    "class": "vehicle",
+    "line": "EAST GATE",
+    "direction": "AtoB",
+    "timestamp": "2026-03-14T14:45:33.627268"
+  },
+  {
+    "frame": 827,
+    "track_id": 291,
+    "class": "vehicle",
+    "line": "EAST GATE",
+    "direction": "AtoB",
+    "timestamp": "2026-03-14T14:46:37.773883"
+  },
+  {
+    "frame": 895,
+    "track_id": 338,
+    "class": "vehicle",
+    "line": "EAST GATE",
+    "direction": "AtoB",
+    "timestamp": "2026-03-14T14:46:56.913292"
+  },
+  {
+    "frame": 1057,
+    "track_id": 338,
+    "class": "vehicle",
+    "line": "EAST GATE",
+    "direction": "BtoA",
+    "timestamp": "2026-03-14T14:47:42.612808"
+  },
+  {
+    "frame": 1193,
+    "track_id": 461,
+    "class": "person",
+    "line": "EAST GATE",
+    "direction": "BtoA",
+    "timestamp": "2026-03-14T14:48:24.301182"
+  },
+  {
+    "frame": 1207,
+    "track_id": 461,
+    "class": "person",
+    "line": "EAST GATE",
+    "direction": "AtoB",
+    "timestamp": "2026-03-14T14:48:28.935894"
+  }
+]
