@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+venv/
+env/
+
+# Data - too large for GitHub
+data/
+
+# Outputs and logs
+outputs/
+results/
+
+# Large model file - will handle separately
+models/best.pt
