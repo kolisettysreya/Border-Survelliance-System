@@ -1,61 +1,96 @@
-import streamlit as st
+import gradio as gr
 import cv2
-import tempfile
+import numpy as np
 import os
-from pathlib import Path
+from huggingface_hub import hf_hub_download
 
-st.set_page_config(page_title="Border Surveillance System", layout="wide")
 
-st.title("🛡️ Border Surveillance System")
-st.markdown("AI-powered border monitoring using YOLOv8 trained on VisDrone dataset")
-
-st.sidebar.header("About")
-st.sidebar.markdown("""
-**Model:** YOLOv8m  
-**Dataset:** VisDrone  
-**Classes:** Person, Vehicle, Motorcycle, Drone, Animal  
-**Task:** Perimeter crossing detection
-""")
-
-st.markdown("### How it works")
-col1, col2, col3 = st.columns(3)
-with col1:
-    st.info("📹 Upload a video or image")
-with col2:
-    st.info("🤖 YOLOv8 detects objects")
-with col3:
-    st.info("🚨 Alerts on perimeter crossing")
-
-uploaded = st.file_uploader("Upload an image for detection",
-                            type=["jpg", "jpeg", "png"])
-
-if uploaded:
+# ---- Load Model ----
+def load_model():
     from ultralytics import YOLO
-    import numpy as np
-
     model_path = "models/best.pt"
     if not os.path.exists(model_path):
-        st.error("Model file not found. Please ensure best.pt is in the models/ folder.")
+        os.makedirs("models", exist_ok=True)
+        hf_hub_download(
+            repo_id="Kolisetty/border-surveillance-yolov8",
+            filename="best.pt",
+            local_dir="models"
+        )
+    return YOLO(model_path)
+
+
+print("Loading model...")
+model = load_model()
+print("Model loaded!")
+
+
+# ---- Detection Function ----
+def detect(image, confidence):
+    if image is None:
+        return None, "No image uploaded"
+
+    # image comes in as RGB from Gradio
+    img_bgr = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+    results = model(img_bgr, conf=confidence)
+    annotated = results[0].plot()
+    annotated_rgb = cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB)
+
+    boxes = results[0].boxes
+    names = model.names
+
+    if len(boxes) > 0:
+        report = f"⚠️ ALERT — {len(boxes)} object(s) detected!\n\n"
+        for i, box in enumerate(boxes):
+            cls = int(box.cls[0])
+            conf_val = float(box.conf[0])
+            report += f"  #{i + 1} → {names[cls]} ({conf_val:.2%} confidence)\n"
     else:
-        model = YOLO(model_path)
+        report = "✅ No threats detected in this frame"
 
-        file_bytes = np.asarray(bytearray(uploaded.read()), dtype=np.uint8)
-        img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+    return annotated_rgb, report
 
-        with st.spinner("Running detection..."):
-            results = model(img, conf=0.3)
-            annotated = results[0].plot()
-            annotated_rgb = cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB)
 
-        st.image(annotated_rgb, caption="Detection Result", use_column_width=True)
+# ---- Gradio UI ----
+with gr.Blocks(title="Border Surveillance System") as demo:
+    gr.Markdown("""
+    # 🛡️ Border Surveillance System
+    AI-powered perimeter monitoring using **YOLOv8m** trained on **VisDrone** dataset.
+    """)
 
-        boxes = results[0].boxes
-        if len(boxes) > 0:
-            st.success(f"✅ Detected {len(boxes)} object(s)")
-            names = model.names
-            for box in boxes:
-                cls = int(box.cls[0])
-                conf = float(box.conf[0])
-                st.write(f"- **{names[cls]}** — confidence: {conf:.2%}")
-        else:
-            st.warning("No objects detected")
+    with gr.Row():
+        with gr.Column():
+            gr.Markdown("### 📤 Input")
+            input_image = gr.Image(label="Upload Surveillance Image")
+            confidence = gr.Slider(
+                minimum=0.1,
+                maximum=0.9,
+                value=0.3,
+                step=0.05,
+                label="Confidence Threshold"
+            )
+            detect_btn = gr.Button("🔍 Run Detection", variant="primary")
+
+        with gr.Column():
+            gr.Markdown("### 📊 Output")
+            output_image = gr.Image(label="Detection Result")
+            output_text = gr.Textbox(label="Detection Report", lines=8)
+
+    detect_btn.click(
+        fn=detect,
+        inputs=[input_image, confidence],
+        outputs=[output_image, output_text]
+    )
+
+    gr.Markdown("""
+    ---
+    ### ℹ️ About
+    | | |
+    |--|--|
+    | **Model** | YOLOv8m |
+    | **Dataset** | VisDrone |
+    | **Epochs** | 30 |
+    | **Classes** | Person, Vehicle, Motorcycle, Drone, Animal |
+    """)
+
+demo.launch()

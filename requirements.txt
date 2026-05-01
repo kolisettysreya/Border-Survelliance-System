@@ -6,6 +6,7 @@ ultralytics>=8.0.0          # YOLOv8 (includes torch dependency management)
 opencv-python>=4.8.0
 numpy>=1.24.0
 pyyaml>=6.0
-streamlit
+gradio
 torch
 torchvision
+huggingface_hub
